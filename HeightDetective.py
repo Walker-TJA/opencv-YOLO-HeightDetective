@@ -3,6 +3,7 @@ import cv2 as cv # OpenCV for camera access
 from ultralytics import YOLO #ai architecture
 import time
 import threading # For threading to run TTS in the background
+import random # For randomness :D
 
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
@@ -87,14 +88,29 @@ while True:
                     print(f"Unexpected keypoint format: {keypoint}")
         
         # Display the real-world height on the frame
-        cv.putText(frame, f"Height: {feet} feet {inches} inches", 
-                   (x1, y1 - 10), cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 0), 2)
+        cv.putText(frame, f"Height: ~{feet}, {inches}''", 
+                   (x1+10, y1 - 10), cv.FONT_HERSHEY_SIMPLEX, 1, (100, 255, 0), 2)
 
         # Speak height every 7 seconds
-        if time.time() - last_speak_time >= 7:
-            speak_thread = threading.Thread(target=speak_text, args=(f"Person is about {feet} feet {inches} inches tall.",))
-            speak_thread.start()  # Start the thread to speak the height
+        if time.time() - last_speak_time >= 10:
+            random_number = random.randint(1, 5)  # Random number to choose between different responses
+            if random_number == 1:
+                speak_thread = threading.Thread(target=speak_text, args=(f"Person is approximatley {feet} feet {inches} inches tall.",))
+                speak_thread.start()  # Start the thread to speak the height
+            elif random_number == 2:
+                insult_threat = threading.Thread(target=speak_text, args=(f"Dang bro is only {feet} foot {inches}, bro needs to start drinking more muscle milk.",))
+                insult_threat.start()  # Start the thread to insult the user
+            elif random_number == 3:
+                insult_threat = threading.Thread(target=speak_text, args=(f"Really? only{feet} foot {inches}, shortest king I have ever seen.",))
+                insult_threat.start()  # Start the thread to insult the user
+            elif random_number == 4:
+                insult_threat = threading.Thread(target=speak_text, args=(f"You're so short that you pass as a 3rd grader",))
+                insult_threat.start()  # Start the thread to insult the user
+            elif random_number == 5:
+                insult_threat = threading.Thread(target=speak_text, args=(f"{feet} foot {inches}, lower your tone when talking to me small one.",))
+                insult_threat.start()  # Start the thread to insult the user
             last_speak_time = time.time()
+
 
     # Display the resulting frame
     cv.imshow('Detected Frame', frame)
